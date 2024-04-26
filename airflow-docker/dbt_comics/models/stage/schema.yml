@@ -1,0 +1,99 @@
+version: 2
+
+sources:
+  - name: raw_comics
+    description: "Raw comics from server"
+    database: airflow
+    schema: stage
+    tables:
+      - name: comic
+        description: "Table containing raw comic data"
+
+models:
+  - name: fact_comics
+    description: "Comics reviews table"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: comic_id
+        data_type: int
+        constraints:
+          - type: not_null
+          - type: primary_key
+        tests:
+          - unique
+          - not_null
+      - name: alt
+        data_type: text
+      - name: img
+        data_type: varchar(1000)
+      - name: link
+        data_type: varchar(1000)
+      - name: news
+        data_type: varchar(1000)
+      - name: safe_title
+        data_type: varchar(1000)
+      - name: title
+        data_type: varchar(1000)
+      - name: transcript
+        data_type: text
+      - name: upload_date
+        data_type: date
+
+  - name: comics_cost
+    description: "Comics cost table"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: comic_id
+        data_type: int
+        constraints:
+          - type: not_null
+          - type: primary_key
+          - type: foreign_key
+            expression: airflow.comics.fact_comics (comic_id)
+        tests:
+          - unique
+          - not_null
+      - name: cost
+        data_type: int
+
+  - name: comics_views
+    description: "Comics views table"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: comic_id
+        data_type: int
+        constraints:
+          - type: not_null
+          - type: primary_key
+          - type: foreign_key
+            expression: airflow.comics.fact_comics (comic_id)
+        tests:
+          - unique
+          - not_null
+      - name: views
+        data_type: int
+
+  - name: comics_reviews
+    description: "Comics reviews table"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: comic_id
+        data_type: int
+        constraints:
+          - type: not_null
+          - type: primary_key
+          - type: foreign_key
+            expression: airflow.comics.fact_comics (comic_id)
+        tests:
+          - unique
+          - not_null
+      - name: reviews
+        data_type: numeric(3,1)
