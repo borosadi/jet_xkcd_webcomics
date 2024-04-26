@@ -1,0 +1,12 @@
+dbt_comics:
+  outputs:
+    dev:
+      dbname: airflow
+      host: airflow-docker-postgres-1
+      pass: airflow
+      port: 5432
+      schema: comics
+      threads: 1
+      type: postgres
+      user: airflow
+  target: dev

@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: agg_comics
+    description: "Comics aggregated view"
+    columns:
+      - name: comic_id
+        tests:
+          - unique
+          - not_null
