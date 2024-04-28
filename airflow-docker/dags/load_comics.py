@@ -1,12 +1,11 @@
 
-import logging
 import datetime
+import logging
 import requests
 from airflow.models.dag import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 from airflow.sensors.python import PythonSensor
-from airflow.providers.postgres.hooks.postgres import PostgresHook
 from sqlalchemy import create_engine, Table, Column, Integer, String, Text, MetaData
 
 
@@ -58,10 +57,9 @@ with DAG(
 
     def get_new_comics(last, new):
         table_cols = list(map(lambda x: str(x).split('.')[1], comic_table.columns))
-        print(table_cols)
         comic_list = []
-        for i in range(last, new + 1):
-            comic_list.append({k: dict(requests.get(f'https://xkcd.com/{i}/info.0.json').json())[k] for k in table_cols})
+        for i in range(last, new):
+            comic_list.append({k: dict(requests.get(f'https://xkcd.com/{i+1}/info.0.json').json())[k] for k in table_cols})
         return comic_list
 
     def load_comic_to_db(ti):
@@ -70,7 +68,6 @@ with DAG(
         comics_list = get_new_comics(last_comic, new_comic)
         with engine.connect() as conn:
             insert_statement = comic_table.insert().values(comics_list)
-            print(insert_statement)
             conn.execute(insert_statement)
         logger.info('New comics loaded to database')
 
