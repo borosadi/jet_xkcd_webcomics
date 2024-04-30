@@ -29,7 +29,7 @@ Execution steps:
 
 3. Now we can access the Airflow server on localhost\
 
-    http://localhost:8080/
+    http://localhost:8080
 
     Username: airflow\
     Password: airflow
@@ -39,7 +39,7 @@ Execution steps:
 4. Run Load_Raw_Comics DAG
     ![alt text](<readme_pics/airflow_dag.png>)
 
-5. The database created in step 3. is accessable through localhost port 5439
+5. The database created in step 2. is accessable through localhost port 5439
 
     Host: localhost\
     Port: 5439\
